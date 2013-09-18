@@ -67,7 +67,7 @@
 				var ratioY = mouseY / self.$viewport.innerHeight() ;
 
 				self.animating = true;
-				self.$el.stop().animate({
+				self.$el.animate({
 					'margin-left': (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px',
 					'margin-top': (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px'}, self.enterAnimationDuration, function(){
 						self.animating = false;
