@@ -17,7 +17,7 @@ $('.element1').trdparallax({
 });
 ```
 Do the same for every other element that should move in the viewport.
-Those options can also be set on the viewport element like this:
+Those options can also be set on the viewport element like this (do this before you call the plugin on the elements):
 
 ```
 $(".viewport").data('options', {
