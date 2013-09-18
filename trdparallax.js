@@ -1,6 +1,10 @@
-/*
- TrdParallax
- Very simple plugin to move parallax elements according to cursor position in viewport.
+/**
+ * TrdParallax
+ * Very simple plugin to move parallax elements according to cursor position in viewport.
+ *
+ * @author Leo Zurbriggen
+ * @version 1.1
+ * Copyright © 2013 Leo Zurbriggen <leo@leoz.ch>
  */
 
 ;(function($) {"use strict";
@@ -10,16 +14,24 @@
 		this.$el = $(el);
 		this.options = options;
 		this.$viewport = this.options.viewport;
-		this.originX = this.options.originX || 0;
-		this.originY = this.options.originY || 0;
-		this.offsetX = this.options.offsetX || 0;
-		this.offsetY = this.options.offsetY || 0;
-		this.invert = this.options.invert || false;
-		this.enterAnimation = this.options.enterAnimation || false;
-		this.leaveAnimation = this.options.leaveAnimation || false;
-		this.enterAnimationDuration = this.options.enterAnimationDuration || 60;
-		this.leaveAnimationDuration = this.options.leaveAnimationDuration || 250;
-		this.leaveReset = this.options.leaveReset || this.leaveAnimation;
+		this.viewportOptions = this.$viewport.data('options') || {};
+		this.originX = this.options.originX || this.viewportOptions.originX || 0;
+		this.originY = this.options.originY || this.viewportOptions.originY || 0;
+		this.offsetX = this.options.offsetX || this.viewportOptions.offsetX || 0;
+		this.offsetY = this.options.offsetY || this.viewportOptions.offsetY || 0;
+		this.invert = this.options.invert || this.viewportOptions.invert || false;
+		this.enterAnimation = this.options.enterAnimation || this.viewportOptions.enterAnimation || false;
+		this.leaveAnimation = this.options.leaveAnimation || this.viewportOptions.leaveAnimation || false;
+		this.enterAnimationDuration = this.options.enterAnimationDuration || this.viewportOptions.enterAnimationDuration || 60;
+		this.leaveAnimationDuration = this.options.leaveAnimationDuration || this.viewportOptions.leaveAnimationDuration || 250;
+		this.leaveReset = this.options.leaveReset || this.viewportOptions.leaveReset || this.leaveAnimation;
+		this.resetOnResize = this.options.resetOnResize || this.viewportOptions.resetOnResize || false;
+
+		$(window).resize(function(){
+			if(self.resetOnResize){
+				self.resize();
+			}
+		});
 
 		this.animating = false;
 
@@ -75,6 +87,15 @@
 				}
 			}
 		});
+
+		// Recalculate element positions
+		self.resize = function(){
+			console.log('resize');
+			self.$el.css('left', self.originX * self.$viewport.innerWidth() - self.originX * self.$el.innerWidth() + (self.originX - 0.5) *  self.offsetX * 2 + 'px');
+			self.$el.css('top', self.originY * self.$viewport.innerHeight() - self.originY * self.$el.innerHeight() + (self.originY - 0.5) * self.offsetY * 2 + 'px');
+			
+			resetPosition();
+		}
 
 		// Reset element position
 		function resetPosition(){
