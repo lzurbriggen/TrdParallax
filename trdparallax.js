@@ -26,7 +26,7 @@
 		this.leaveAnimationDuration = this.options.leaveAnimationDuration || this.viewportOptions.leaveAnimationDuration || 250;
 		this.leaveReset = this.options.leaveReset || this.viewportOptions.leaveReset || this.leaveAnimation;
 		this.resetOnResize = this.options.resetOnResize || this.viewportOptions.resetOnResize || false;
-		this.easing = this.options.easing || 'ease';
+		this.easing = this.options.easing || this.viewportOptions.easing || 'ease';
 
 		$(window).resize(function(){
 			if(self.resetOnResize){
