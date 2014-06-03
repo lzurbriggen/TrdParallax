@@ -55,6 +55,7 @@ Options
 | leaveAnimationDuration | (int) Duration of the mouse leave animation | 250 |
 | leaveReset | Reset position if curosr leaves the viewport, automatically active if leaveAnimation is true | false |
 | resetOnResize | Recalculates element positions when window is resized | false |
+| easing | Sets the easing function of the enter- and leave animations, all css3 transition functions are available | 'ease' |
 
 License
 ------

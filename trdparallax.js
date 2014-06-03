@@ -3,8 +3,8 @@
  * Very simple plugin to move parallax elements according to cursor position in viewport.
  *
  * @author Leo Zurbriggen
- * @version 1.1
- * Copyright © 2013 Leo Zurbriggen <leo@leoz.ch>
+ * @version 1.2
+ * Copyright © 2014 Leo Zurbriggen <leo@leoz.ch>
  */
 
 ;(function($) {"use strict";
@@ -26,6 +26,7 @@
 		this.leaveAnimationDuration = this.options.leaveAnimationDuration || this.viewportOptions.leaveAnimationDuration || 250;
 		this.leaveReset = this.options.leaveReset || this.viewportOptions.leaveReset || this.leaveAnimation;
 		this.resetOnResize = this.options.resetOnResize || this.viewportOptions.resetOnResize || false;
+		this.easing = this.options.easing || 'ease';
 
 		$(window).resize(function(){
 			if(self.resetOnResize){
@@ -49,13 +50,6 @@
 		
 		resetPosition();
 
-		// Recalculate element positions when mouse moves and enter animation is not being played
-		self.$viewport.on('mousemove', function(e) {
-			if(self.animating == false){
-				calcMargins(e);
-			}
-		});
-		
 		// Animate elements to cursor position to make entering the viewport smoother when configured
 		self.$viewport.on('mouseenter', function(e) {
 			if(self.enterAnimation){
@@ -67,11 +61,22 @@
 				var ratioY = mouseY / self.$viewport.innerHeight() ;
 
 				self.animating = true;
-				self.$el.animate({
-					'margin-left': (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px',
-					'margin-top': (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px'}, self.enterAnimationDuration, function(){
-						self.animating = false;
-					});
+				self.$el.css('transition', 'all ' + self.enterAnimationDuration / 1000 + 's ' + self.easing);
+				self.$el.css('transform', 'translate3d(' + (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
+														 + (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
+
+				setTimeout(function(){
+					self.animating = false;
+				}, self.enterAnimationDuration);
+			}
+
+			self.hover = true;
+		});
+
+		// Recalculate element positions when mouse moves and enter animation is not being played
+		self.$viewport.on('mousemove', function(e) {
+			if(self.hover && self.animating === false){
+				calcPosition(e);
 			}
 		});
 		
@@ -79,13 +84,14 @@
 		self.$viewport.on('mouseleave', function(e) {
 			if(self.leaveReset){
 				if(self.leaveAnimation){
-					self.$el.animate({
-						'margin-left': (self.sign * 0.5 * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px',
-						'margin-top': (self.sign * 0.5 * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px'}, self.leaveAnimationDuration);
+					self.$el.css('transition', 'all ' + self.leaveAnimationDuration / 1000 + 's ' + self.easing);
+					self.$el.css('transform', 'translate3d(' + (self.sign * 0.5 * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
+															 + (self.sign * 0.5 * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
 				}else{
 					resetPosition();
 				}
 			}
+			self.hover = false;
 		});
 
 		// Recalculate element positions
@@ -98,12 +104,12 @@
 
 		// Reset element position
 		function resetPosition(){
-			self.$el.css('margin-left', (self.sign * 0.5 * self.offsetX / 2 -self.sign * self.originX * self.offsetX / 2) * 2 + 'px');
-			self.$el.css('margin-top', (self.sign * 0.5 * self.offsetY / 2 -self.sign * self.originY * self.offsetY / 2) * 2 + 'px');
+			self.$el.css('transform', 'translate3d(' + (self.sign * 0.5 * self.offsetX / 2 -self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
+													 + (self.sign * 0.5 * self.offsetY / 2 -self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
 		}
 		
 		// Calculate element position based on cursor position in viewport
-		function calcMargins(e){
+		function calcPosition(e){
 			var parentOffset = self.$el.parent().offset(); 
 			var mouseX = e.pageX - parentOffset.left;
 			var mouseY = e.pageY - parentOffset.top;
@@ -111,8 +117,9 @@
 			var ratioX = mouseX / self.$viewport.innerWidth() ;
 			var ratioY = mouseY / self.$viewport.innerHeight() ;
 
-			self.$el.css('margin-left', (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px');
-			self.$el.css('margin-top', (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px');
+			self.$el.css('transition', 'all 0 linear');
+			self.$el.css('transform', 'translate3d(' + (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px,'
+								 					 + (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
 		}
 
 		return this;
