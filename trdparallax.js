@@ -45,8 +45,8 @@
 		self.$el.css('float', 'left');
 		self.$el.css('position', 'absolute');
 
-		self.$el.css('left', self.originX * self.$viewport.innerWidth() - self.originX * self.$el.innerWidth() + (self.originX - 0.5) *  self.offsetX * 2 + 'px');
-		self.$el.css('top', self.originY * self.$viewport.innerHeight() - self.originY * self.$el.innerHeight() + (self.originY - 0.5) * self.offsetY * 2 + 'px');
+		self.$el.css('left', self.originX * Math.round(self.$viewport.innerWidth() - self.originX * self.$el.innerWidth() + (self.originX - 0.5) *  self.offsetX * 2 * 100) / 100 + 'px');
+		self.$el.css('top', self.originY * Math.round(self.$viewport.innerHeight() - self.originY * self.$el.innerHeight() + (self.originY - 0.5) * self.offsetY * 2 * 100) / 100 + 'px');
 		
 		resetPosition();
 
@@ -62,8 +62,8 @@
 
 				self.animating = true;
 				self.$el.css('transition', 'all ' + self.enterAnimationDuration / 1000 + 's ' + self.easing);
-				self.$el.css('transform', 'translate3d(' + (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
-														 + (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
+				self.$el.css('transform', 'translate3d(' + Math.round((self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 * 100) / 100 + 'px, '
+														 + Math.round((self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 * 100) / 100 + 'px, 0)');
 
 				setTimeout(function(){
 					self.animating = false;
@@ -85,8 +85,8 @@
 			if(self.leaveReset){
 				if(self.leaveAnimation){
 					self.$el.css('transition', 'all ' + self.leaveAnimationDuration / 1000 + 's ' + self.easing);
-					self.$el.css('transform', 'translate3d(' + (self.sign * 0.5 * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
-															 + (self.sign * 0.5 * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
+					self.$el.css('transform', 'translate3d(' + Math.round((self.sign * 0.5 * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 * 100) / 100 + 'px, '
+															 + Math.round((self.sign * 0.5 * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 * 100) / 100 + 'px, 0)');
 				}else{
 					resetPosition();
 				}
@@ -96,16 +96,16 @@
 
 		// Recalculate element positions
 		self.resize = function(){
-			self.$el.css('left', self.originX * self.$viewport.innerWidth() - self.originX * self.$el.innerWidth() + (self.originX - 0.5) *  self.offsetX * 2 + 'px');
-			self.$el.css('top', self.originY * self.$viewport.innerHeight() - self.originY * self.$el.innerHeight() + (self.originY - 0.5) * self.offsetY * 2 + 'px');
+			self.$el.css('left', self.originX * self.$viewport.innerWidth() - self.originX * self.$el.innerWidth() + (self.originX - 0.5) * 2 *  self.offsetX + 'px');
+			self.$el.css('top', self.originY * self.$viewport.innerHeight() - self.originY * self.$el.innerHeight() + (self.originY - 0.5) * 2 * self.offsetY + 'px');
 			
 			resetPosition();
 		}
 
 		// Reset element position
 		function resetPosition(){
-			self.$el.css('transform', 'translate3d(' + (self.sign * 0.5 * self.offsetX / 2 -self.sign * self.originX * self.offsetX / 2) * 2 + 'px, '
-													 + (self.sign * 0.5 * self.offsetY / 2 -self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
+			self.$el.css('transform', 'translate3d(' + Math.round((self.sign * 0.5 * self.offsetX / 2 -self.sign * self.originX * self.offsetX / 2) * 2 * 100) / 100  + 'px, '
+													 + Math.round((self.sign * 0.5 * self.offsetY / 2 -self.sign * self.originY * self.offsetY / 2) * 2 * 100) / 100  + 'px, 0)');
 		}
 		
 		// Calculate element position based on cursor position in viewport
@@ -118,8 +118,8 @@
 			var ratioY = mouseY / self.$viewport.innerHeight() ;
 
 			self.$el.css('transition', 'all 0 linear');
-			self.$el.css('transform', 'translate3d(' + (self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 2 + 'px,'
-								 					 + (self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 2 + 'px, 0)');
+			self.$el.css('transform', 'translate3d(' + Math.round((self.sign * ratioX * self.offsetX / 2 - self.sign * self.originX * self.offsetX / 2) * 1000) / 1000 * 2 + 'px,'
+								 					 + Math.round((self.sign * ratioY * self.offsetY / 2 - self.sign * self.originY * self.offsetY / 2) * 1000) / 1000 * 2 + 'px, 0)');
 		}
 
 		return this;
